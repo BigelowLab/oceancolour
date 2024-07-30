@@ -1,0 +1,17 @@
+Package: oceancolour
+Type: Package
+Title: Access OceanColor.org data via OPeNDAP
+Version: 0.1.0
+Author: Ben Tupper 
+Maintainer: Ben Tupper <btupper@bigelow.org>
+Description: Easy R access to OceanColor.org data via OPeNDAP.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+  rlang,
+  ncdf4,
+  stars,
+  sf
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
