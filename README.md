@@ -82,11 +82,8 @@ And plot…
 
 ``` r
 plot(log10(x), axes = TRUE, reset = FALSE)
-plot(coast, add = TRUE, col = "darkgreen")
+plot(sf::st_geometry(coast), add = TRUE, col = "darkgreen")
 ```
-
-    ## Warning in plot.sf(coast, add = TRUE, col = "darkgreen"): ignoring all but the
-    ## first attribute
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
@@ -192,11 +189,8 @@ x2
 
 ``` r
 plot(log10(x2), axes = TRUE, reset = FALSE)
-plot(coast, add = TRUE, col = "darkgreen")
+plot(sf::st_geometry(coast), add = TRUE, col = "darkgreen")
 ```
-
-    ## Warning in plot.sf(coast, add = TRUE, col = "darkgreen"): ignoring all but the
-    ## first attribute
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 

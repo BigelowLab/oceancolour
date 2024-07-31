@@ -66,7 +66,7 @@ And plot...
 
 ```{r}
 plot(log10(x), axes = TRUE, reset = FALSE)
-plot(coast, add = TRUE, col = "darkgreen")
+plot(sf::st_geometry(coast), add = TRUE, col = "darkgreen")
 ```
 
 
@@ -121,7 +121,7 @@ x2
 
 ```{r}
 plot(log10(x2), axes = TRUE, reset = FALSE)
-plot(coast, add = TRUE, col = "darkgreen")
+plot(sf::st_geometry(coast), add = TRUE, col = "darkgreen")
 ```
 
 Finally, close this resource, too.
