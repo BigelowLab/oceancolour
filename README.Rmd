@@ -25,9 +25,9 @@ remotes::install_github("BigelowLab/oceancolour")
 
 ## Usage
 
-The OceanColor products are quit large, so it is handy to be able to request and download a subset.  Here we use a boundign box for the Gulf of Maine.
+The OceanColor products are quit large, so it is handy to be able to request and download a subset.  Here we use a bounding box for the Gulf of Maine.
 
-We use a [URL](https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2024/ESACCI-OC-L3S-OC_PRODUCTS-MERGED-1D_DAILY_1km_GEO_PML_OCx_QAA-20240719-fv6.0_1km.nc.html) we have selected manually.
+We use a [URL](https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2024/ESACCI-OC-L3S-OC_PRODUCTS-MERGED-1D_DAILY_1km_GEO_PML_OCx_QAA-20240401-fv6.0_1km.nc.html) we have selected manually.  This is a high resolution (~ 1km) daily composite for just one day.
 
 
 ```{r}
@@ -40,19 +40,25 @@ suppressPackageStartupMessages({
 
 coast = rnaturalearth::ne_coastline(scale = "medium", returnclass = "sf")
 
-url = "https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2024/ESACCI-OC-L3S-OC_PRODUCTS-MERGED-1D_DAILY_1km_GEO_PML_OCx_QAA-20240719-fv6.0_1km.nc"
+url = "https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2024/ESACCI-OC-L3S-OC_PRODUCTS-MERGED-1D_DAILY_1km_GEO_PML_OCx_QAA-20240401-fv6.0_1km.nc"
 
 bb = c(xmin = -72, xmax = -63, ymin = 39, ymax = 46)
 var = "chlor_a"
 
-NC = ncdf4::nc_open(url)
+NC1 = ncdf4::nc_open(url)
 ```
 
-Now we generate a list that contains defines the bounding box, and us that to access the data.
+Check out `?get_lon` for a listing of helper functions used to navigate the object.  For example...
 
 ```{r}
-nav = get_nav(NC, bb = bb)
-x = get_var(NC, var = var, nav = nav, form = 'stars')
+(res1 <- get_res(NC1))
+```
+
+Now we generate a list that contains defines the bounding box, and us that to access the data. Not we request the output form [stars](https://r-spatial.github.io/stars/) which is the default.  We could also request "matrix".
+
+```{r}
+nav = get_nav(NC1, bb = bb)
+x = get_var(NC1, var = var, nav = nav, form = 'stars')
 x
 ```
 
@@ -67,5 +73,60 @@ plot(coast, add = TRUE, col = "darkgreen")
 Finally, close the resource.
 
 ```{r}
-ncdf4::nc_close(NC)
+ncdf4::nc_close(NC1)
 ```
+
+
+### Aggregate data
+
+Aggregate data files are also provided.  [This example](https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v6.0-DAILY.html) provides an aggregate dataset of daily data for many variables from 1997 to present (lagged by a few months.)
+
+```{r}
+url = "https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v6.0-DAILY"
+NC2 = ncdf4::nc_open(url)
+```
+
+Note that the resource has much lower resolution.
+
+```{r}
+(res2 <- get_res(NC2))
+```
+
+Let's compare the high resolution example to this...
+
+```{r}
+res2/res1
+```
+
+So, the aggregate is about ~4km resolution.  But on the plus side it covers more time...
+
+```{r}
+summary(get_time(NC2))
+```
+
+... and ... contains a lot of variables...
+
+```{r}
+get_varnames(NC2)
+```
+
+Let's get the same date (2024-04-01) to compare.
+
+```{r}
+nav = get_nav(NC2, bb = bb, time = as.Date("2024-01-01"))
+x2 = get_var(NC2, var = "chlor_a", nav = nav)
+x2
+```
+
+
+```{r}
+plot(log10(x2), axes = TRUE, reset = FALSE)
+plot(coast, add = TRUE, col = "darkgreen")
+```
+
+Finally, close this resource, too.
+
+```{r}
+ncdf4::nc_close(NC2)
+```
+

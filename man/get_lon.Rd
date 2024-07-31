@@ -6,7 +6,9 @@
 \alias{get_epoch}
 \alias{get_time}
 \alias{get_res}
-\title{Retrieve coordinates}
+\alias{get_varnames}
+\alias{get_dimnames}
+\title{Retrieve coordinates and attributes}
 \usage{
 get_lon(x)
 
@@ -17,6 +19,10 @@ get_epoch(x)
 get_time(x)
 
 get_res(x)
+
+get_varnames(x)
+
+get_dimnames(x)
 }
 \arguments{
 \item{x}{ncdf4 object}

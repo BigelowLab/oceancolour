@@ -1,4 +1,4 @@
-#' Retrieve coordinates
+#' Retrieve coordinates and attributes
 #'
 #' The functions `get_lon` and `get_lat` return numeric vectors of pixel center locations.
 #' `get_epoch` and `get_time` return (most likely) Date vectors, but support for
@@ -12,11 +12,13 @@ get_lon <- function(x){
   x$dim$lon$vals
 }
 
+#' @export
 #' @rdname get_lon
 get_lat <- function(x){
   x$dim$lat$vals
 }
 
+#' @export
 #' @rdname get_lon
 get_epoch <- function(x){
 
@@ -30,6 +32,7 @@ get_epoch <- function(x){
   epoch
 }
 
+#' @export
 #' @rdname get_lon
 get_time <- function(x){
 
@@ -43,16 +46,24 @@ get_time <- function(x){
   t
 }
 
-#' Get the geospatial resolution in x and y
+#' @export
 #' @rdname get_lon
 get_res <- function(x){
   c(abs(diff(x$dim$lon$vals[1:2])),
     abs(diff(x$dim$lat$vals[1:2])))
 }
 
-url="https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2024/ESACCI-OC-L3S-OC_PRODUCTS-MERGED-1D_DAILY_1km_GEO_PML_OCx_QAA-20240719-fv6.0_1km.nc"
+#' @export
+#' @rdname get_lon
+get_varnames <- function(x){
+  names(x$var)
+}
 
-
+#' @export
+#' @rdname get_lon
+get_dimnames <- function(x){
+  names(x$dim)
+}
 
 #' Retrieve navigation information needed for subsetting based upon a
 #' bounding box.
@@ -69,7 +80,6 @@ url="https://www.oceancolour.org/thredds/dodsC/cci/v6.0-1km-release/geographic/2
 #'  * res the actual resolution
 #'  * bb_ - the requested bounding box
 #'  * time_ - the requested time
-
 get_nav = function(x, bb = c(xmin = -77,   ymin = 36.5,
                              xmax = -42.5, ymax = 56.7),
                    time = 1){
@@ -83,7 +93,7 @@ get_nav = function(x, bb = c(xmin = -77,   ymin = 36.5,
 
   if (!inherits(time, "numeric")){
     tm = get_time(x)
-    tix = findInterval(tm, time)
+    tix = findInterval(time, tm)
   } else {
     tix = time
   }
